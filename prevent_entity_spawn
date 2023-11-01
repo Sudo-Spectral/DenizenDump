@@ -1,0 +1,26 @@
+prevent_entity_spawn:
+    type: world
+    events:
+        on entity spawns because DISPENSE_EGG:
+            - determine cancelled
+        on entity spawns because SPAWNER_EGG:
+            - determine cancelled
+        on entity spawns because SPAWNER:
+            - determine cancelled
+        on entity spawns because EGG:
+            - determine cancelled
+        on entity spawns because BUILD_WITHER:
+            - determine cancelled
+        on entity spawns because BUILD_SNOWMAN:
+            - determine cancelled
+        on entity spawns because BUILD_IRONGOLEM:
+            - determine cancelled
+        on entity spawns because BEEHIVE:
+            - determine cancelled
+        on entity spawns because ENDER_PEARL:
+            - determine cancelled
+        on entity spawns because NATURAL:
+            - determine cancelled
+        # Nether should be disabled?
+        on entity spawns because NETHER_PORTAL:
+            - determine cancelled
