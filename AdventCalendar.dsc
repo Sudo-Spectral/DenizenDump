@@ -51,17 +51,24 @@ advent_world:
   type: world
   events:
     on player clicks item_flagged:day in advent_inventory:
-    - if <context.item.flag[claimed_day]> == <context.item.flag[advent_day]>:
+    - define advent_day <player.flag[advent_day]||1>
+    - define claimed_day <player.flag[claimed_day]||100>
+    - define clicked_day:<context.item.flag[day]>
+
+    # If player has flag claimed day for the day that they clicked
+    - if <player.flag[claimed_day]> == <[clicked_day]>:
     # Days prize already claimed
       - narrate "You've already claimed this!"
+    # If player doesn't have claimed flag for the day they clicked
     - else:
         # Days prize not yet claimed
-      - if <context.item.flag[day]> == <context.item.flag[advent_day]>:
+      # If player has the advent_day flag for the day
+      - if <player.has_flag[advent_day]>:<[advent_day]>:
         # Correct day to claim prize
-        - flag <player> claimed_day:<context.item.flag[day]>
-        # ^^ Gives player day_claimed flag not allowing them to claim again.
+        # Sets claimed flag for whichever day was clicked
+        - flag <player> claimed_day:<[clicked_day]>
 
-
+        - narrate 'YOU GOT YOUR PRESENTS OKAY!'
 
         # GIVE PLAYERS PRIZES IN HERE :)
 
@@ -73,6 +80,11 @@ advent_world:
 
     - narrate "You clicked on the item representing day <context.item.flag[day]>"
 
+remove_flags:
+  type: task
+  script:
+    - foreach <player.list_flags>:
+      - flag <player> <[value]>:!
 
 
 # No clue if this works XD
