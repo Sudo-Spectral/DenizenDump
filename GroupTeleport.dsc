@@ -1,11 +1,3 @@
-GroupTeleport:
-    type: world
-    events:
-        after player enters spawn:
-            - narrate "Hi <player.name>"
-        after player exits spawn:
-            - narrate Goodbye!
-
 # Command to be run in-game to teleport a group of players in one place to another
 teleport_command:
     type: command
@@ -34,7 +26,7 @@ on_enter_spawn:
         after player exits Spawn:
             # Only allows to run once every 10 seconds
             - ratelimit <player> 10s
-            - narrate You are leaving spawn now...
+            - narrate 'You are leaving spawn now...'
 
 
 # Should work for any notable but doesn't work...
