@@ -26,26 +26,23 @@ advent_inventory:
   - define current_day <player.flag[advent_day]||1>
   - define claimed_day <player.flag[claimed_day]||0>
 
+  # Loops to place in all items based on criteria
   - repeat <[max_days]> as:n:
-    #If loop index lesser than current day = alr claimed
+    #If Index Lesser than current_day == claimed
     - if <[n]> < <[current_day]>:
+      # Sets Inventory space as [opened] object
       - define item <item[opened]>
-    #if equal, current day ADD COOLDOWN FLAG?
+    #if Index == current_day: Today
     - else if <[n]> == <[current_day]>:
-      #- define item <item[current]>
-      # If player has claimed_Day flag equal to current day
+      # If player has claimed_day flag equal to current day, claimed already
       - if <[n]> == <[claimed_day]>:
-      # Has claimed
         - define item <item[opened]>
-        - narrate Claimed!
       - else:
       # Not claimed
         - define item <item[current]>
-        - narrate Unclaimed!
-    #If the loop index greater, appears unavailable
+    #If Index greater than current_day, Day hasn't happened yet
     - else:
       - define item <item[unavailable]>
-
 
     - define days_items_list:->:<[item].with_single[display=<&6>Day <[n]>].with_flag[day:<[n]>]>
   - determine <[days_items_list]>
@@ -66,11 +63,29 @@ advent_world:
 
 
 
+        # GIVE PLAYERS PRIZES IN HERE :)
 
 
         - inventory close
       - else:
-      # Incorrect day to claim prize
-        - narrate "WRONG DAY"
+        # Incorrect day to claim prize
+        - narrate "Can't claim this prize!"
 
     - narrate "You clicked on the item representing day <context.item.flag[day]>"
+
+
+
+# No clue if this works XD
+#on_player_joins:
+#  type: world
+#  events:
+#    on player joins:
+#      - repeat <context.item.flag[max_days]> as:n:
+#        # If day has already passed
+#        - if <[n]> < <context.item.flag[current_day]>:
+#          - flag <player> claimed_day:<[n]>
+#
+#        # Todays day
+#        - if <context.item.flag[day]> == <context.item.flag[advent_day]>:
+#          - flag <player> advent_day:<context.item.flag[current_day]>
+
