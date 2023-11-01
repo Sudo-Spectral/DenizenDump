@@ -11,33 +11,32 @@ teleport_command:
     description: Teleports a group of players within a predefined area to another predefined area
     usage: /groupTP (posA) (posB)
     tab completions:
-        1: spawn|placeholder|placeholder2
+        # Lists all valid cuboid locations
+        1: <util.notes[cuboids]>
     script:
-        - define notableA <[Notable/<context.args.get[1]>]>
-        #                                                               what would work here?
-        - narrate Group Teleport! <context.args.get[1]> <context.args.get[2]>
-
-on_enter_spawn:
-    type: world
-    events:
-        after player enters Spawn:
-            - ratelimit <player> 10s
-            - narrate "Welcome <player.name> to spawn!"
-        after player exits Spawn:
-            # Only allows to run once every 10 seconds
-            - ratelimit <player> 10s
-            - narrate 'You are leaving spawn now...'
-
-
-# Should work for any notable but doesn't work...
-#on_enter_notable:
-#  type: world
-#  events:
-#    after player enters Notable:
-#      - define notable_name <context.location.notable_name>
-#      - if <[Notable/<context.location.notable_name>].is_set>:
-#        - ratelimit <player> 10s
-#        - narrate "Welcome <player.name> to <[Notable/<context.location.notable_name>].notable_name>!"
-#
-
-
+        # Checks command provided had correct amount of arguements to be valid
+        - if <context.args.size> == 2:
+            # Defines the cuboids and catches if they are incorrectly named
+            - define notableA <cuboid[<context.args.get[1]>].if_null[null]>
+            - define notableB <cuboid[<context.args.get[2]>].if_null[null]>
+            # If first location is invalid
+            - if <[notableA]> == null:
+                # If both locations are invalid
+                - if <[notableB]> == null:
+                    - narrate "Neither location exist!"
+                # If only first location is invalid
+                - else:
+                    - narrate "Your first location doesn't exist!"
+            # If first location is valid
+            - else:
+                - if <[notableB]> == null:
+                    # If second location is invalid
+                    - narrate "Your second location doesn't exist!"
+                # If both locations are valid and the command is properly syntaxed
+                - else:
+                    # Teleports all players within arg1 to arg2 cuboids centre
+                    - teleport <[notableA].players> <[notableB].center>
+                    - narrate 'Players teleported'
+        # Provided too many or too few arguements
+        - else:
+            - narrate 'Incorrect amount of arguements!'
